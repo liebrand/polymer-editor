@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <title>polymer-adaptable-edit</title>
+  <script src="../../../platform/platform.js"></script>
+  <script src="../../../tools/test/htmltest.js"></script>
+  <script src="../../../tools/test/chai/chai.js"></script>
+
+  <script src="../utils/eventUtils.js"></script>
+  <script src="../utils/text.js"></script>
+  <script src="../utils/keys.js"></script>
+  <script src="../utils/keyboard.js"></script>
+
+  <link rel="import" href="../../core/polymer-editor.html"/>
+
+</head>
+<body>
+
+  <polymer-editor id="my-editor">
+    <polymer-editor-content>hello</polymer-editor-content>
+  </polymer-editor>
+
+  <script>
+    var assert = chai.assert;
+    document.addEventListener('WebComponentsReady', function() {
+
+      var editor = document.querySelector('#my-editor');
+      assert.isDefined(editor, 'our editor is defined');
+
+      var range = document.createRange();
+      range.setStart(editor.firstChild, 0);
+      range.setEnd(editor.firstChild, 0);
+
+      window.getSelection().removeAllRanges();
+
+      // HACK... canary seems to expose range through new impl property??
+      var hack = range.impl ? range.impl : range;
+      window.getSelection().addRange(hack);
+
+      Keyboard.type(text('foobar')).then(function(a) {
+        assert.equal(editor.innerText, 'foobarhello');
+        done();
+      }).catch(onerror);;
+
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+
+<link rel="import" href="../../polymer/polymer.html">
+
+<polymer-element name="polymer-editor" attributes="name">
+  <template>
+    <style>
+      :host {
+        -webkit-user-modify: read-write;
+        -webkit-user-select: text;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    Polymer('polymer-editor', {
+
+      name: '',
+
+      enteredView: function() {
+        window.foo = 'bar';
+      },
+    });
+  </script>
+</polymer-element>
