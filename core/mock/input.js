@@ -12,6 +12,14 @@
 
 window.Input = function(emitter) {
 
+  document.body.addEventListener('keypress', function(evt) {
+    // block all normal behaviour from happening...
+    evt.preventDefault();
+    var letter = evt.keyIdentifier;
+    emitter.emit('insertText', {text: letter});
+  });
+
+
   document.body.addEventListener('keydown', function(evt) {
     switch (evt.keyCode) {
       case 8:
@@ -34,12 +42,6 @@ window.Input = function(emitter) {
         break;
 
       default:
-        // block all normal behaviour from happening...
-        evt.preventDefault();
-        var letter = String.fromCharCode(evt.keyCode);
-        emitter.emit('insertText', {
-          text: letter
-        });
         break;
     }
   });
