@@ -21,27 +21,8 @@
         !! modifiers.altGraph);
 
     evt.origin = 'mockKeyboard';
-    // The event init method does not set all the required
-    // properties so we brute force set them on the object.
     defineGetter_(evt, {
-      'charCode': key.charCode,
-      'keyCode': key.keyCode,
-      'keyIdentifier': key.keyIdentifier,
-      'which': key.which
-    });
-    return evt;
-  }
-
-  function makeTextEvent_(key) {
-    var evt = document.createEvent('TextEvent');
-    evt.initTextEvent('textInput', true, true, window, key, 0);
-    evt.origin = 'mockKeyboard';
-    // The event init method does not set all the required
-    // properties so we brute force set them on the object.
-    defineGetter_(evt, {
-      'charCode': key.charCode,
-      'keyCode': key.keyCode,
-      'which': key.which
+      'keyCode': key.charCodeAt(0)
     });
     return evt;
   }
@@ -55,20 +36,7 @@
 
         window.setTimeout(function() {
           try {
-            switch (type) {
-              case 'textInput':
-                document.body.dispatchEvent(makeTextEvent_(key));
-                break;
-
-              case 'keydown':
-              case 'keyup':
-              case 'keypress':
-                document.body.dispatchEvent(makeKeyBoardEvent_(key, type));
-                break;
-
-              default:
-                break;
-            }
+            document.body.dispatchEvent(makeKeyBoardEvent_(key, type));
             resolve();
           } catch (e) {
             reject(e);

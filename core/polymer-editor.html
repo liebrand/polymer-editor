@@ -1,6 +1,8 @@
 
 <link rel="import" href="../../polymer/polymer.html">
 
+<link rel="import" href="polymer-editor-content.html">
+
 <polymer-element name="polymer-editor" attributes="name">
   <template>
     <style>
@@ -11,14 +13,11 @@
     </style>
     <content></content>
   </template>
-  <script>
-    Polymer('polymer-editor', {
 
-      name: '',
+  <script src="utils/domUtils.js"></script>
+  <script src="events/emitter.js"></script>
+  <script src="mock/input.js"></script>
+  <script src="mock/selection.js"></script>
 
-      enteredView: function() {
-        window.foo = 'bar';
-      },
-    });
-  </script>
+  <script src="polymer-editor.js"></script>
 </polymer-element>
