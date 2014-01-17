@@ -15,7 +15,7 @@ window.Input = function(emitter) {
   document.body.addEventListener('keypress', function(evt) {
     // block all normal behaviour from happening...
     evt.preventDefault();
-    var letter = evt.keyIdentifier;
+    var letter = String.fromCharCode(evt.charCode);
     emitter.emit('insertText', {text: letter});
   });
 

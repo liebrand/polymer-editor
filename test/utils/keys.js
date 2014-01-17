@@ -1,30 +1,48 @@
 
 // used to type text:
-// Keyboard.type(text('hello'));
-// Keyboard.type(text('one'), keys('⌘','b'));
+// Keyboard.type(keys('⌘','b'));
+//
+// should results in:
+// ['⌘ keydown','b keydown', '⌘ keyup','b keyup']
+//
+// Keyboard.type(keys('a', 'b').repeat(2))
+// should result in:
+// ['a keydown','b keydown', 'a keyup','b keyup', 'a keydown','b keydown', 'a keyup','b keyup']
 
 
 var Keys = function() {
+  this.repeatCount = 1;
   this.keysToPress = [];
   for (var i = 0; i < arguments.length; i++) {
     var key = arguments[i];
-    this.keysToPress.push(key);
+    this.keysToPress.push(parseAlias(key));
   }
 };
 Keys.prototype = {
   __proto__: Object.prototype,
+
+  repeat: function(count) {
+    this.repeatCount = count;
+    return this;
+  },
+
   getPromise: function() {
-    var deferred = when.defer();
-    var chain = deferred.promise;
-    var types = ['down', 'up'];
-    for (var j = 0; j < types.length; j++) {
-      var type = types[j];
-      for (var i = 0; i < this.keysToPress.length; i++) {
-        var letter = this.keysToPress[i];
-        chain = chain.then(EventUtils.makeEvent.bind(null, letter, type));
+
+    var chain = new Promise(function(resolve, reject) {
+      resolve();
+    });
+
+    var types = ['keydown', 'keyup'];
+    for (var i = 0; i < this.repeatCount; i++) {
+      for (var k = 0; k < types.length; k++) {
+        var type = types[k];
+        for (var j = 0; j < this.keysToPress.length; j++) {
+          var keyToPress = getKeyObjext(this.keysToPress[j]);
+          chain = chain.then(EventUtils.makeEvent.bind(null, keyToPress, type));
+        }
       }
     }
-    deferred.resolve();
+
     return chain;
   }
 };

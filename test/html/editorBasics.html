@@ -1,11 +1,12 @@
 <!doctype html>
 <html>
 <head>
-  <title>polymer-adaptable-edit</title>
+  <title>polymer-editor</title>
   <script src="../../../platform-dev/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
 
+  <script src="../utils/keyCodeMap.js"></script>
   <script src="../utils/eventUtils.js"></script>
   <script src="../utils/text.js"></script>
   <script src="../utils/keys.js"></script>
@@ -47,19 +48,29 @@
       Keyboard.type(text('foobar')).then(function(a) {
         assert.equal(editor.innerText, 'foobarhello');
       }).then(function() {
+
         // test insert text in the middle
         placeCaret(6);
         return Keyboard.type(text('eggs'));
       }).then(function() {
         assert.equal(editor.innerText, 'foobareggshello');
       }).then(function() {
+
         // test insert text at the end
         placeCaret(editor.innerText.length);
         return Keyboard.type(text('world'));
       }).then(function() {
         assert.equal(editor.innerText, 'foobareggshelloworld');
         done();
-      }).catch(onerror);
+      }).then(function() {
+
+        // test backspace
+        placeCaret(6);
+        return Keyboard.type(keys('⟵').repeat(6));
+      }).then(function() {
+        assert.equal(editor.innerText, 'eggshelloworld');
+      })
+      .catch(onerror);
 
     });
   </script>

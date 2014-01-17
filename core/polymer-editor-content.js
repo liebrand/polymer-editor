@@ -11,6 +11,7 @@
     supports: function(editIntent, context) {
       switch (editIntent) {
         case 'insertNode':
+        case 'deleteNode':
           return true;
           break;
         default:
@@ -29,6 +30,16 @@
           } else {
             this.appendChild(context.node);
           }
+          return true;
+        }
+      }
+    },
+
+    deleteNode: function(context) {
+      if (context.ip) {
+        if (this === context.ip.container) {
+          // delete the node
+          this.removeChild(this.childNodes[context.ip.offset]);
           return true;
         }
       }

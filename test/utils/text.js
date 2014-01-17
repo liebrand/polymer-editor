@@ -16,7 +16,7 @@ Text.prototype = {
     });
 
     for (var i = 0; i < this.textToType.length; i++) {
-      var letter = this.textToType[i];
+      var letter = getKeyObjext(this.textToType[i]);
 
       // our fake Input module, only cares about keydown and keypress, so no
       // need to fake all the other events for this POC

@@ -1,0 +1,47 @@
+
+<link rel="import" href="../../polymer/polymer.html">
+
+<polymer-element name="polymer-gmail-quote" attributes="name">
+  <template>
+    <style>
+      :host {
+      }
+    </style>
+    <content></content>
+  </template>
+
+  <script>
+
+    Polymer('polymer-gmail-quote', {
+
+      name: '',
+
+      ready: function() {},
+
+      enteredView: function() {},
+
+      supports: function(editIntent, context) {
+        switch (editIntent) {
+          case 'insertNode':
+            return false;
+            break;
+          case 'createNewNode':
+            // could (/SHOULD?) check the context insertionPoint before
+            // blatantly supporting new node?
+            return true;
+
+          default:
+            return false;
+            break;
+        }
+      },
+
+      createNewNode: function(context) {
+        // TODO(jliebrand):
+      }
+
+    });
+    // ------------------------------------------------------
+
+  </script>
+</polymer-element>

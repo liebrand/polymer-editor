@@ -2,9 +2,11 @@
 
   function defineGetter_(obj, map) {
     for (var key in map) {
+      console.log(key, map[key])
+      var value = map[key];
       Object.defineProperty(obj, key, {
         get: function() {
-          return map[key];
+          return value;
         }
       });
     }
@@ -13,7 +15,7 @@
   function makeKeyBoardEvent_(key, type, modifiers) {
     modifiers = modifiers || {};
     var evt = document.createEvent('KeyboardEvent');
-    evt.initKeyboardEvent(type, true, true, window, key, 0,
+    evt.initKeyboardEvent(type, true, true, window, key.name, 0,
         !! modifiers.control,
         !! modifiers.alt,
         !! modifiers.shift,
@@ -21,9 +23,11 @@
         !! modifiers.altGraph);
 
     evt.origin = 'mockKeyboard';
-    defineGetter_(evt, {
-      'keyCode': key.charCodeAt(0)
-    });
+    Object.defineProperty(evt, 'keyCode', {get: function() {return key.keyCode;}});
+    Object.defineProperty(evt, 'charCode', {get: function() {return key.charCode;}});
+    Object.defineProperty(evt, 'which', {get: function() {return key.which;}});
+    Object.defineProperty(evt, 'keyIdentifier', {get: function() {return key.keyIdentifier;}});
+
     return evt;
   }
 

@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <title>polymer-gmail-example</title>
+  <script src="../../../platform-dev/platform.js"></script>
+  <script src="../../../tools/test/htmltest.js"></script>
+  <script src="../../../tools/test/chai/chai.js"></script>
+
+  <script src="../utils/eventUtils.js"></script>
+  <script src="../utils/text.js"></script>
+  <script src="../utils/keys.js"></script>
+  <script src="../utils/keyboard.js"></script>
+
+
+  <link rel="import" href="../../examples/gmail/polymer-gmail-quote.html"/>
+  <link rel="import" href="../../core/polymer-editor.html"/>
+
+</head>
+<body>
+
+   <polymer-editor id="my-editor">
+    <polymer-editor-content>
+      This example shows how in email, blockquotes can be handled
+      differently than normal HTML blockquotes. In that any edit, in particular
+      an enter key stroke in the middle of a blockquote, will break the quote
+      and allow the user to comment inline.
+      <polymer-gmail-quote>
+        <polymer-gmail-paragraph>
+          The first reply to this email
+        </polymer-gmail-paragraph>
+        <polymer-gmail-quote>
+          <polymer-gmail-paragraph>
+            The second reply Which is a bit longer and has multiple paragraphs
+          </polymer-gmail-paragraph>
+          <polymer-gmail-paragraph>
+            So that we can test commenting on the first para of a multi-para quote
+          </polymer-gmail-paragraph>
+      </polymer-gmail-quote>
+    </polymer-editor-content>
+  </polymer-editor>
+
+  <script>
+
+    var assert = chai.assert;
+    document.addEventListener('WebComponentsReady', function() {
+
+      // run some tests
+
+    });
+  </script>
+</body>
+</html>
