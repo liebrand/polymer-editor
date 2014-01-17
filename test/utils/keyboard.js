@@ -9,7 +9,7 @@ var Keyboard = {
 
   type: function() {
 
-    var chain = new Promise(function(resolve, reject) {
+    var chain = when.promise(function(resolve, reject) {
       resolve();
     });
     for (var i = 0; i < arguments.length; i++) {

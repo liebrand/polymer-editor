@@ -35,8 +35,7 @@
   window.EventUtils = {
 
     makeEvent: function(key, type, timeout) {
-
-      return new Promise(function(resolve, reject) {
+      return when.promise(function(resolve, reject) {
 
         window.setTimeout(function() {
           try {

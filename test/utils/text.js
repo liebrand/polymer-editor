@@ -11,7 +11,7 @@ Text.prototype = {
   __proto__: Object.prototype,
   getPromise: function() {
 
-    var chain = new Promise(function(resolve, reject) {
+    var chain = when.promise(function(resolve, reject) {
       resolve();
     });
 
