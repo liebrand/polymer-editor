@@ -7,49 +7,56 @@
 //
 // Keyboard.type(keys('a', 'b').repeat(2))
 // should result in:
-// ['a keydown','b keydown', 'a keyup','b keyup', 'a keydown','b keydown', 'a keyup','b keyup']
+// ['a keydown','b keydown', 'a keyup','b keyup',
+//  'a keydown','b keydown', 'a keyup','b keyup']
+
+define([
+  'test/utils/keyCodeMap',
+  'test/utils/eventUtils'], function(KeyCodeMap, EventUtils) {
+  'use strict';
 
 
-var Keys = function() {
-  this.repeatCount = 1;
-  this.keysToPress = [];
-  for (var i = 0; i < arguments.length; i++) {
-    var key = arguments[i];
-    this.keysToPress.push(parseAlias(key));
-  }
-};
-Keys.prototype = {
-  __proto__: Object.prototype,
+  var Keys = function() {
+    this.repeatCount = 1;
+    this.keysToPress = [];
+    for (var i = 0; i < arguments.length; i++) {
+      var key = arguments[i];
+      this.keysToPress.push(KeyCodeMap.parseAlias(key));
+    }
+  };
+  Keys.prototype = {
 
-  repeat: function(count) {
-    this.repeatCount = count;
-    return this;
-  },
+    repeat: function(count) {
+      this.repeatCount = count;
+      return this;
+    },
 
-  getPromise: function() {
+    getPromise: function() {
 
-    var chain = when.promise(function(resolve, reject) {
-      resolve();
-    });
+      var chain = when.promise(function(resolve, reject) {
+        resolve();
+      });
 
-    var types = ['keydown', 'keyup'];
-    for (var i = 0; i < this.repeatCount; i++) {
-      for (var k = 0; k < types.length; k++) {
-        var type = types[k];
-        for (var j = 0; j < this.keysToPress.length; j++) {
-          var keyToPress = getKeyObjext(this.keysToPress[j]);
-          chain = chain.then(EventUtils.makeEvent.bind(null, keyToPress, type));
+      var types = ['keydown', 'keyup'];
+      for (var i = 0; i < this.repeatCount; i++) {
+        for (var k = 0; k < types.length; k++) {
+          var type = types[k];
+          for (var j = 0; j < this.keysToPress.length; j++) {
+            var keyToPress = window.getKeyObjext(this.keysToPress[j]);
+            chain = chain.then(
+              EventUtils.makeEvent.bind(null, keyToPress, type));
+          }
         }
       }
+
+      return chain;
     }
+  };
 
-    return chain;
-  }
-};
-
-window.keys = function(keysToPress) {
-  var keysInstance = new Keys();
-  Keys.apply(keysInstance, arguments);
-  return keysInstance;
-};
+  return function(keysToPress) {
+    var keysInstance = new Keys();
+    Keys.apply(keysInstance, arguments);
+    return keysInstance;
+  };
+});
 

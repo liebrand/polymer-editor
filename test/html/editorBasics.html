@@ -1,19 +1,15 @@
 <!doctype html>
 <html>
 <head>
-  <title>polymer-editor</title>
+  <title>Basic Test</title>
 
-  <script src="../../third_party/when/when.js"></script>
+  <!--<script src="../../third_party/when/when.js"></script>-->
 
   <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
 
-  <script src="../utils/keyCodeMap.js"></script>
-  <script src="../utils/eventUtils.js"></script>
-  <script src="../utils/text.js"></script>
-  <script src="../utils/keys.js"></script>
-  <script src="../utils/keyboard.js"></script>
+  <script src="../../node_modules/requirejs/require.js"></script>
 
   <link rel="import" href="../../core/polymer-editor.html"/>
 
@@ -25,6 +21,12 @@
   </polymer-editor>
 
   <script>
+
+  require.config({
+      baseUrl: "../../"
+    });
+
+  require(['test/utils/keyboard'], function(Keyboard) {
 
     // hard codes the element placement based on above html
     function placeCaret(offset) {
@@ -44,26 +46,27 @@
       // make sure we have an editor - should probably test more than
       // just the fact the element is defined... ?
       var editor = document.querySelector('#my-editor');
+      var editorContent = document.querySelector('polymer-editor-content');
       assert.isDefined(editor, 'our editor is defined');
 
       // test insert text at start
       placeCaret(0);
       Keyboard.type(text('foobar')).then(function(a) {
-        assert.equal(editor.innerText, 'foobarhello');
+        assert.equal(editorContent.innerText, 'foobarhello');
       }).then(function() {
 
         // test insert text in the middle
         placeCaret(6);
         return Keyboard.type(text('eggs'));
       }).then(function() {
-        assert.equal(editor.innerText, 'foobareggshello');
+        assert.equal(editorContent.innerText, 'foobareggshello');
       }).then(function() {
 
         // test insert text at the end
-        placeCaret(editor.innerText.length);
+        placeCaret(editorContent.innerText.length);
         return Keyboard.type(text('world'));
       }).then(function() {
-        assert.equal(editor.innerText, 'foobareggshelloworld');
+        assert.equal(editorContent.innerText, 'foobareggshelloworld');
         done();
       }).then(function() {
 
@@ -71,11 +74,14 @@
         placeCaret(6);
         return Keyboard.type(keys('⟵').repeat(6));
       }).then(function() {
-        assert.equal(editor.innerText, 'eggshelloworld');
+        assert.equal(editorContent.innerText, 'eggshelloworld');
       })
       .catch(onerror);
 
     });
+
+  });
+
   </script>
 </body>
 </html>

@@ -13,6 +13,13 @@
 // limitations under the License.
 
 module.exports = function(grunt) {
+
+  var srcFiles = [
+    'core/**/*.js',
+    'test/**/*.js'
+    ];
+
+
   grunt.initConfig({
     karma: {
       options: {
@@ -25,13 +32,32 @@ module.exports = function(grunt) {
       },
       'polymer-editor': {
       }
+    },
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc',
+        reporter: 'customJsHintReporter.js',
+        debug: true
+      },
+      all: {
+        src: srcFiles
+      }
+    },
+    watch: {
+      all: {
+        files: srcFiles,
+        tasks: ['newer:jshint:all']
+      }
     }
   });
 
   grunt.loadTasks('../tools/tasks');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-newer');
 
   grunt.registerTask('default', 'test');
   grunt.registerTask('test', ['override-chrome-launcher', 'karma:polymer-editor']);
-  // grunt.registerTask('test-buildbot', ['override-chrome-launcher', 'karma:buildbot']);
+  grunt.registerTask('lint', ['jshint:all']);
 };

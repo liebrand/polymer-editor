@@ -2,7 +2,6 @@
 
   function defineGetter_(obj, map) {
     for (var key in map) {
-      console.log(key, map[key])
       var value = map[key];
       Object.defineProperty(obj, key, {
         get: function() {
@@ -35,7 +34,7 @@
   window.EventUtils = {
 
     makeEvent: function(key, type, timeout) {
-      return when.promise(function(resolve, reject) {
+      var eventPromise = function(resolve, reject) {
 
         window.setTimeout(function() {
           try {
@@ -46,7 +45,8 @@
           }
         }, timeout);
 
-      });
+      };
+      return when.promise(eventPromise);
 
     }
   };

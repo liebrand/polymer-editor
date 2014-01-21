@@ -9,27 +9,28 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
-'use strict';
+(function() {
+  "use strict";
 
-window.Emitter = function() {
-  this.registry_ = {};
-};
+  window.Emitter = function() {
+    this.registry_ = {};
+  };
 
-Emitter.prototype = {
-  __proto__: Object.prototype,
+  Emitter.prototype = {
+    on: function(eventName, callback) {
+      this.registry_[eventName] = this.registry_[eventName] || [];
+      this.registry_[eventName].push(callback);
+    },
 
-  on: function(eventName, callback) {
-    this.registry_[eventName] = this.registry_[eventName] || [];
-    this.registry_[eventName].push(callback);
-  },
-
-  emit: function(eventName, data) {
-    var callbacks = this.registry_[eventName];
-    if (callbacks) {
-      callbacks.forEach(function(callback) {
-        callback.call(this, data);
-      })
+    emit: function(eventName, data) {
+      var callbacks = this.registry_[eventName];
+      if (callbacks) {
+        callbacks.forEach(function(callback) {
+          callback.call(this, data);
+        })
+      }
     }
-  }
-};
+  };
 
+
+})();

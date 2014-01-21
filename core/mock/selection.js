@@ -6,16 +6,29 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
+window.DomPosition = function(container, offset) {
+  this.container = container;
+  this.offset = offset;
+}
+
+DomPosition.prototype = {
+  __proto__: Object.prototype,
+
+  insideTextNode: function() {
+    return this.container.nodeType === Node.TEXT_NODE;
+  }
+};
+
+
+
+
 window.Selection = {
 
-  domPosition: function() {
+  startDomPosition: function() {
     var sel = window.getSelection();
     if (sel.rangeCount > 0) {
       var range = sel.getRangeAt(0);
-      return {
-        container: range.startContainer,
-        offset: range.startOffset
-      };
+      return new DomPosition(range.startContainer, range.startOffset);
     }
   },
 
@@ -28,10 +41,7 @@ window.Selection = {
         return ip;
       } else {
         var tnOffset = DomUtils.splitText(ip.container, ip.offset);
-        return {
-          container: ip.container.parentNode,
-          offset: tnOffset
-        }
+        return new DomPosition(ip.container.parentNode, tnOffset);
       }
     }
   },

@@ -1,23 +1,25 @@
 
-'use strict';
+define(['third_party/when/when'], function(when) {
 
-window.__mockKeys = [];
+  'use strict';
 
+  var Keyboard = {
 
+    type: function() {
 
-var Keyboard = {
-
-  type: function() {
-
-    var chain = when.promise(function(resolve, reject) {
-      resolve();
-    });
-    for (var i = 0; i < arguments.length; i++) {
-      var arg = arguments[i];
-      if (arg && arg.getPromise) {
-        chain = chain.then(arg.getPromise.bind(arg));
+      var chain = when.promise(function(resolve, reject) {
+        resolve();
+      });
+      for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (arg && arg.getPromise) {
+          chain = chain.then(arg.getPromise.bind(arg));
+        }
       }
+      return chain;
     }
-    return chain;
-  }
-};
+  };
+
+  return Keyboard;
+});
+
