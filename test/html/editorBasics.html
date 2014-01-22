@@ -18,6 +18,21 @@
 </head>
 <body>
 
+  <h3>Introduction</h3>
+  <p>
+    This page tests the basics of &lt;polymer-editor&gt;, in particular
+    it inserts text at the start, middle and end of existing text. and also
+    verifies that backspace within text will delete characters.
+  </p>
+  <p>
+    <strong>
+      NOTE: at present white-spaces are being collapsed, which is
+      causing problems when you try to add a space at the end (or start)
+      of existing text. We will resolve this for now by using nbsp;
+    </strong>
+  </p>
+  <hr/>
+
   <polymer-editor id="my-editor">
     <polymer-editor-content>hello</polymer-editor-content>
   </polymer-editor>
@@ -59,12 +74,14 @@
       placeCaret(0);
       Keyboard.type(Text('foobar')).then(function(a) {
         assert.equal(editorContent.innerText, 'foobarhello');
+        done();
       }).then(function() {
         // test insert text in the middle
         placeCaret(6);
         return Keyboard.type(Text('eggs'));
       }).then(function() {
         assert.equal(editorContent.innerText, 'foobareggshello');
+        done();
       }).then(function() {
 
         // test insert text at the end
@@ -80,6 +97,7 @@
         return Keyboard.type(Keys("⟵").repeat(6));
       }).then(function() {
         assert.equal(editorContent.innerText, 'eggshelloworld');
+        done();
       })
       .catch(onerror);
     }
