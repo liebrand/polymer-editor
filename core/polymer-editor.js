@@ -106,7 +106,6 @@ require([
        *                                       (think sublime use case!)
        */
       this.emitter_.on('delete', function(context) {
-
         // TODO(jliebrand): Break this mamoth function up in smaller bits!
 
         // TODO(jliebrand): need to support direction better; too much

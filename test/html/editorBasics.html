@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<meta charset="UTF-8">
 <head>
   <title>Basic Test</title>
 
@@ -21,7 +22,7 @@
     <polymer-editor-content>hello</polymer-editor-content>
   </polymer-editor>
 
-  <script>
+  <script type="text/javascript" charset="utf-8">
 
   require.config({
       baseUrl: "../../"
@@ -76,7 +77,7 @@
 
         // test backspace
         placeCaret(6);
-        return Keyboard.type(Keys('⟵').repeat(6));
+        return Keyboard.type(Keys("⟵").repeat(6));
       }).then(function() {
         assert.equal(editorContent.innerText, 'eggshelloworld');
       })

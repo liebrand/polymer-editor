@@ -9,7 +9,7 @@ define([], function() {
     // all added to the existing parent
     // returns child node offset of the new text node
     splitText: function(textNode, offset, opt_length) {
-      if (offset > 0) {
+      if (offset > 0 || opt_length) {
         var parentElement = textNode.parentNode;
         var sibling = textNode.nextSibling;
         var newFrag = document.createDocumentFragment();

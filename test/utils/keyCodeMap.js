@@ -30,6 +30,7 @@ define([], function() {
       'esc': 'escape'
     };
 
+
     // Iterator variable.
     var c;
     // List of characters for programatically adding data.

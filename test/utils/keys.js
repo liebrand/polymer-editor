@@ -18,7 +18,7 @@ define([
 
   'use strict';
 
-  var Keys = function() {
+  var Keys = function(x) {
     this.repeatCount = 1;
     this.keysToPress = [];
     for (var i = 0; i < arguments.length; i++) {
