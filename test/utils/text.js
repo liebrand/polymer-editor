@@ -3,13 +3,13 @@
 // Keyboard.type(text('hello'));
 // Keyboard.type(text('one'), keys('⌘','b'));
 
-(function() {
-  'use strict';
+define([
+  'test/utils/eventUtils',
+  'test/utils/keyCodeMap'], function(
+    EventUtils,
+    KeyCodeMap) {
 
-  // TODO(jliebrand): this is crap; how should one combine AMD style JS with
-  // html imports (in such a way to not just satisfy jshint, but also actually
-  // ensure that files are indeed loaded in dependency order??
-  var EventUtils = window.EventUtils;
+  'use strict';
 
   var Text = function(textToType) {
     this.textToType = textToType;
@@ -19,31 +19,30 @@
 
     getPromise: function() {
 
-      var chain = when.promise(function(resolve, reject) {
+      var chain = new Promise(function(resolve, reject) {
         resolve();
       });
-      var createEvent = function(chain, type) {
-        return chain.then(EventUtils.makeEvent.bind(null, letter, type));
-      };
 
       for (var i = 0; i < this.textToType.length; i++) {
-        var letter = window.getKeyObjext(this.textToType[i]);
+        var letter = KeyCodeMap.getKeyObject(this.textToType[i]);
 
         // our fake Input module, only cares about keydown and keypress, so no
         // need to fake all the other events for this POC
         // var types = ['keydown', 'keypress', 'textInput', 'keyup'];
         var types = ['keydown', 'keypress'];
-        types.reduce(createEvent, chain);
+        types.forEach(function(type) {
+          chain = chain.then(EventUtils.makeEvent.bind(null, letter, type));
+        });
       }
 
       return chain;
     }
   };
 
-  window.text = function(textToType) {
+  return function(textToType) {
     var textInstance = new Text(textToType);
     return textInstance;
   };
 
-})();
+});
 

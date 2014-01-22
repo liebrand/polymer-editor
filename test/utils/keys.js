@@ -11,10 +11,12 @@
 //  'a keydown','b keydown', 'a keyup','b keyup']
 
 define([
-  'test/utils/keyCodeMap',
-  'test/utils/eventUtils'], function(KeyCodeMap, EventUtils) {
-  'use strict';
+  'test/utils/eventUtils',
+  'test/utils/keyCodeMap'], function(
+    EventUtils,
+    KeyCodeMap) {
 
+  'use strict';
 
   var Keys = function() {
     this.repeatCount = 1;
@@ -33,7 +35,7 @@ define([
 
     getPromise: function() {
 
-      var chain = when.promise(function(resolve, reject) {
+      var chain = new Promise(function(resolve, reject) {
         resolve();
       });
 
@@ -42,7 +44,7 @@ define([
         for (var k = 0; k < types.length; k++) {
           var type = types[k];
           for (var j = 0; j < this.keysToPress.length; j++) {
-            var keyToPress = window.getKeyObjext(this.keysToPress[j]);
+            var keyToPress = KeyCodeMap.getKeyObject(this.keysToPress[j]);
             chain = chain.then(
               EventUtils.makeEvent.bind(null, keyToPress, type));
           }

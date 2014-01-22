@@ -1,6 +1,6 @@
 
 
-define(['qowtRoot/'], function(Dep) {
+define([], function() {
 
     'use strict';
 
@@ -145,9 +145,9 @@ define(['qowtRoot/'], function(Dep) {
       parseAlias: function(alias) {
         return aliases_[alias] || alias;
       },
-      getKeyObjext: function(keyName) {
+      getKeyObject: function(keyName) {
         return {
-          name: parseAlias(keyName),
+          name: this.parseAlias(keyName),
           textInput: textInput_[keyName],
           charCode: charCodes_[keyName],
           keyCode: keyCodes_[keyName],

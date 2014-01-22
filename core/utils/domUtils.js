@@ -9,21 +9,22 @@ define([], function() {
     // all added to the existing parent
     // returns child node offset of the new text node
     splitText: function(textNode, offset, opt_length) {
-      var parentElement = textNode.parentNode;
-      var sibling = textNode.nextSibling;
-      var newFrag = document.createDocumentFragment();
-      var newTn = textNode.splitText(offset)
-      newFrag.appendChild(newTn);
-      if (opt_length) {
-        newFrag.appendChild(newTn.splitText(opt_length));
-      }
+      if (offset > 0) {
+        var parentElement = textNode.parentNode;
+        var sibling = textNode.nextSibling;
+        var newFrag = document.createDocumentFragment();
+        var newTn = textNode.splitText(offset)
+        newFrag.appendChild(newTn);
+        if (opt_length) {
+          newFrag.appendChild(newTn.splitText(opt_length));
+        }
 
-      if (sibling) {
-        parentElement.insertBefore(newFrag, sibling);
-      } else {
-        parentElement.appendChild(newFrag);
+        if (sibling) {
+          parentElement.insertBefore(newFrag, sibling);
+        } else {
+          parentElement.appendChild(newFrag);
+        }
       }
-
       return this.indexOf(newTn ? newTn : textNode);
     },
 

@@ -1,5 +1,5 @@
 
-define(['third_party/when/when'], function(when) {
+define([], function() {
 
   'use strict';
 
@@ -7,7 +7,7 @@ define(['third_party/when/when'], function(when) {
 
     type: function() {
 
-      var chain = when.promise(function(resolve, reject) {
+      var chain = new Promise(function(resolve, reject) {
         resolve();
       });
       for (var i = 0; i < arguments.length; i++) {

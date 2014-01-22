@@ -63,9 +63,9 @@ require([
               // hack to move the selection - this should be handled
               // differently so this core edit can remain oblivious
               // to selection movement!
-              for (var i = 0; i < context.text.length; i++) {
-                getSelection().modify('move', 'forward', 'character');
-              }
+              tnOffset++;
+              var caret = new DomPosition(dp.container.childNodes[tnOffset], 0);
+              Selection.setStartDomPosition(caret);
             }
             context.dp.container.normalize();
           }

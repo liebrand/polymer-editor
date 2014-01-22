@@ -1,4 +1,7 @@
-(function() {
+
+define([], function() {
+
+  'use strict';
 
   function defineGetter_(obj, map) {
     for (var key in map) {
@@ -31,24 +34,28 @@
   }
 
 
-  window.EventUtils = {
+  var EventUtils = {
 
-    makeEvent: function(key, type, timeout) {
-      var eventPromise = function(resolve, reject) {
+    makeEvent: function(key, type, delay) {
+      if (delay === undefined) {
+        delay = 10;
+      }
+      return new Promise(function(resolve, reject) {
 
         window.setTimeout(function() {
           try {
+            console.log('dispatch: ', key);
             document.body.dispatchEvent(makeKeyBoardEvent_(key, type));
             resolve();
           } catch (e) {
             reject(e);
           }
-        }, timeout);
+        }, delay);
 
-      };
-      return when.promise(eventPromise);
-
+      });
     }
   };
 
-})();
+  return EventUtils;
+});
+

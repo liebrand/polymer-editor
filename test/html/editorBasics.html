@@ -9,7 +9,7 @@
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
 
-<!--  <script src="../../node_modules/requirejs/require.js"></script>-->
+  <script src="../../node_modules/requirejs/require.js"></script>
 
   <link rel="import" href="../../core/polymer-editor.html"/>
   <link rel="import" href="../../core/polymer-editor-content.html">
@@ -23,65 +23,76 @@
 
   <script>
 
-  // require.config({
-  //     baseUrl: "../../"
-  //   });
+  require.config({
+      baseUrl: "../../"
+    });
 
-  // require(['test/utils/keyboard'], function(Keyboard) {
+  require([
+    'test/utils/eventUtils',
+    'test/utils/keyboard',
+    'test/utils/text',
+    'test/utils/keys',
+    ], function(EventUtils, Keyboard, Text, Keys) {
 
-  //   // hard codes the element placement based on above html
-  //   function placeCaret(offset) {
-  //     var editor = document.querySelector('#my-editor');
-  //     var content = editor.firstElementChild;
-  //     var contentTextNode = content.firstChild;
-  //     var range = document.createRange();
-  //     range.setStart(contentTextNode, offset);
-  //     range.setEnd(contentTextNode, offset);
-  //     window.getSelection().removeAllRanges();
-  //     window.getSelection().addRange(range);
-  //   }
+    // hard codes the element placement based on above html
+    function placeCaret(offset) {
+      var editor = document.querySelector('#my-editor');
+      var content = editor.firstElementChild;
+      var contentTextNode = content.firstChild;
+      var range = document.createRange();
+      range.setStart(contentTextNode, offset);
+      range.setEnd(contentTextNode, offset);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
 
-  //   var assert = chai.assert;
-  //   document.addEventListener('WebComponentsReady', function() {
+    function test() {
 
-  //     // make sure we have an editor - should probably test more than
-  //     // just the fact the element is defined... ?
-  //     var editor = document.querySelector('#my-editor');
-  //     var editorContent = document.querySelector('polymer-editor-content');
-  //     assert.isDefined(editor, 'our editor is defined');
+      // make sure we have an editor - should probably test more than
+      // just the fact the element is defined... ?
+      var editor = document.querySelector('#my-editor');
+      var editorContent = document.querySelector('polymer-editor-content');
+      assert.isDefined(editor, 'our editor is defined');
 
-  //     // test insert text at start
-  //     placeCaret(0);
-  //     Keyboard.type(text('foobar')).then(function(a) {
-  //       assert.equal(editorContent.innerText, 'foobarhello');
-  //     }).then(function() {
+      // test insert text at start
+      placeCaret(0);
+      Keyboard.type(Text('foobar')).then(function(a) {
+        assert.equal(editorContent.innerText, 'foobarhello');
+      }).then(function() {
+        // test insert text in the middle
+        placeCaret(6);
+        return Keyboard.type(Text('eggs'));
+      }).then(function() {
+        assert.equal(editorContent.innerText, 'foobareggshello');
+      }).then(function() {
 
-  //       // test insert text in the middle
-  //       placeCaret(6);
-  //       return Keyboard.type(text('eggs'));
-  //     }).then(function() {
-  //       assert.equal(editorContent.innerText, 'foobareggshello');
-  //     }).then(function() {
+        // test insert text at the end
+        placeCaret(editorContent.innerText.length);
+        return Keyboard.type(Text('world'));
+      }).then(function() {
+        assert.equal(editorContent.innerText, 'foobareggshelloworld');
+        done();
+      }).then(function() {
 
-  //       // test insert text at the end
-  //       placeCaret(editorContent.innerText.length);
-  //       return Keyboard.type(text('world'));
-  //     }).then(function() {
-  //       assert.equal(editorContent.innerText, 'foobareggshelloworld');
-  //       done();
-  //     }).then(function() {
+        // test backspace
+        placeCaret(6);
+        return Keyboard.type(Keys('⟵').repeat(6));
+      }).then(function() {
+        assert.equal(editorContent.innerText, 'eggshelloworld');
+      })
+      .catch(onerror);
+    }
 
-  //       // test backspace
-  //       placeCaret(6);
-  //       return Keyboard.type(keys('⟵').repeat(6));
-  //     }).then(function() {
-  //       assert.equal(editorContent.innerText, 'eggshelloworld');
-  //     })
-  //     .catch(onerror);
+    var assert = chai.assert;
+    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
+    // done loading all modules (right?!) so it would fire too soon for
+    // us to run the test
+    // document.addEventListener('WebComponentsReady', test);
 
-  //   });
+    // just wait a second for now; fix this though!
+    setTimeout(test, 1000);
 
-  // });
+  });
 
   </script>
 </body>
