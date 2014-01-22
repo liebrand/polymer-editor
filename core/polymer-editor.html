@@ -14,18 +14,29 @@
     <content></content>
   </template>
 
-<!--  <script src="utils/domUtils.js"></script>
-  <script src="events/emitter.js"></script>
-  <script src="mock/input.js"></script>
-  <script src="mock/selection.js"></script>
+ <!--
+  Ideally i'd like to use the 'normal' requireJs notation to load the main
+  script as follows:
 
--->
+ <script data-main="./polymer-editor" src="../node_modules/requirejs/require.js"></script>
+
+  This would ensure the basePath is automatically set correct. However, this
+  does not appaer to work within HTMLImports. RequireJs assumes the script
+  is inside the DOM and searches for any script with 'data-main' attrib.
+  But the script doesn't appear to be in the DOM? Thus that fails.
+
+  The net result is that i have to create my own requireJs config to set the
+  basePath relative to this HTML page. Note: chrome packaged apps will not
+  like inline script like this due to their CSP... One could write this
+  differently, or perhaps we should make the normal requireJs loader work
+  inside HTML imports?
+  -->
+  <script src="../node_modules/requirejs/require.js"></script>
   <script>
-  console.log('import worked');
+    require.config({
+      baseUrl: "../../",
+    });
   </script>
-
-<!--  <script src="polymer-editor.js"></script>-->
-
-  <script data-main="./polymer-editor" src="../node_modules/requirejs/require.js"></script>
+  <script src="polymer-editor.js"></script>
 
 </polymer-element>

@@ -21,10 +21,10 @@
     },
 
     insertNode: function(context) {
-      if (context.ip) {
-        if (this === context.ip.container) {
+      if (context.dp) {
+        if (this === context.dp.container) {
           // insert the node
-          var sibling = this.childNodes[context.ip.offset];
+          var sibling = this.childNodes[context.dp.offset];
           if (sibling) {
             this.insertBefore(context.node, sibling);
           } else {
@@ -36,10 +36,10 @@
     },
 
     deleteNode: function(context) {
-      if (context.ip) {
-        if (this === context.ip.container) {
+      if (context.dp) {
+        if (this === context.dp.container) {
           // delete the node
-          this.removeChild(this.childNodes[context.ip.offset]);
+          this.removeChild(this.childNodes[context.dp.offset]);
           return true;
         }
       }

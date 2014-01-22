@@ -9,10 +9,11 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
-(function() {
-  "use strict";
+define([], function() {
 
-  window.Emitter = function() {
+  'use strict';
+
+  var Emitter = function() {
     this.registry_ = {};
   };
 
@@ -32,5 +33,6 @@
     }
   };
 
+  return Emitter;
+});
 
-})();

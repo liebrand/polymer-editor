@@ -10,39 +10,51 @@
  * @author jelte@google.com (Jelte Liebrand)
  */
 
-window.Input = function(emitter) {
+define([], function() {
 
-  document.body.addEventListener('keypress', function(evt) {
-    // block all normal behaviour from happening...
-    evt.preventDefault();
-    var letter = String.fromCharCode(evt.charCode);
-    emitter.emit('insertText', {text: letter});
-  });
+  'use strict';
+
+  var Input = function(emitter) {
+
+    // TODO(jliebrand): should probably set the listener
+    // on the <polymer-editor> ? not the document.body??
+    document.body.addEventListener('keypress', function(evt) {
+      // block all normal behaviour from happening...
+      evt.preventDefault();
+      var letter = String.fromCharCode(evt.charCode);
+      emitter.emit('insertText', {text: letter});
+    });
 
 
-  document.body.addEventListener('keydown', function(evt) {
-    switch (evt.keyCode) {
-      case 8:
-        evt.preventDefault();
-        var context = {};
-        context.direction = evt.shiftKey ? 'forward' : 'backward';
+    // TODO(jliebrand): should probably set the listener
+    // on the <polymer-editor> ? not the document.body??
+    document.body.addEventListener('keydown', function(evt) {
+      switch (evt.keyCode) {
+        case 8:
+          evt.preventDefault();
+          var context = {};
+          context.direction = evt.shiftKey ? 'forward' : 'backward';
 
-        // TODO(jliebrand): this behaviour should be definable
-        // by the app... but how??
-        // hack, this locale specific word boundary should
-        // be handled elsewhere; although app should be able
-        // to specify; think sublime ctrl-delete camelCase
-        context.amount = evt.metaKey ? 'word' : 'character';
-        emitter.emit('delete', context);
+          // TODO(jliebrand): this behaviour should be definable
+          // by the app... but how??
+          // hack, this locale specific word boundary should
+          // be handled elsewhere; although app should be able
+          // to specify; think sublime ctrl-delete camelCase
+          context.amount = evt.metaKey ? 'word' : 'character';
+          emitter.emit('delete', context);
 
-        break;
-      case 13:
-        evt.preventDefault();
-        emitter.emit('splitTree');
-        break;
+          break;
+        case 13:
+          evt.preventDefault();
+          emitter.emit('splitTree');
+          break;
 
-      default:
-        break;
-    }
-  });
-};
+        default:
+          break;
+      }
+    });
+  };
+
+  return Input;
+});
+
