@@ -44,7 +44,6 @@ define([], function() {
 
         window.setTimeout(function() {
           try {
-            console.log('dispatch: ', key);
             document.body.dispatchEvent(makeKeyBoardEvent_(key, type));
             resolve();
           } catch (e) {

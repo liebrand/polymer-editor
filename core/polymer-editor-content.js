@@ -2,8 +2,6 @@
 
   Polymer('polymer-editor-content', {
 
-    name: '',
-
     ready: function() {},
 
     enteredView: function() {},

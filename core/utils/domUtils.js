@@ -37,7 +37,49 @@ define([], function() {
         prev = prev.previousSibling;
       }
       return offset;
-    }
+    },
+
+    /**
+     * @return {HTML Element} the previous node in reverse document order, eg:
+     *
+     *                     A
+     *                    / \
+     *                   /   \
+     *                  B     C
+     *                 /\     /\
+     *                D  E   F  G
+     *                      /
+     *                     H
+     *
+     *  previousNode(C) === E
+     *  previousNode(G) === H
+     *  previousNode(F) === E
+     *  previousNode(E) === D
+     */
+    previousNode: function(srcNode) {
+      var prevNode = srcNode ? srcNode.previousSibling : undefined;
+      while (!prevNode && srcNode && srcNode.parentNode) {
+        srcNode = srcNode.parentNode;
+        prevNode = srcNode.previousSibling;
+      }
+      while (prevNode && prevNode.lastChild) {
+        prevNode = prevNode.lastChild;
+      }
+      return prevNode;
+    },
+
+    // opposite of previousNode
+    nextNode: function(srcNode) {
+      var nextNode = srcNode ? srcNode.nextSibling : undefined;
+      while (!nextNode && srcNode && srcNode.parentNode) {
+        srcNode = srcNode.parentNode;
+        nextNode = srcNode.nextSibling;
+      }
+      while (nextNode && nextNode.firstChild) {
+        nextNode = nextNode.firstChild;
+      }
+      return nextNode;
+    },
   };
 
   return DomUtils;

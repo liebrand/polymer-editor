@@ -4,8 +4,6 @@
 <head>
   <title>Basic Test</title>
 
-  <!--<script src="../../third_party/when/when.js"></script>-->
-
   <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
@@ -74,14 +72,12 @@
       placeCaret(0);
       Keyboard.type(Text('foobar')).then(function(a) {
         assert.equal(editorContent.innerText, 'foobarhello');
-        done();
       }).then(function() {
         // test insert text in the middle
         placeCaret(6);
         return Keyboard.type(Text('eggs'));
       }).then(function() {
         assert.equal(editorContent.innerText, 'foobareggshello');
-        done();
       }).then(function() {
 
         // test insert text at the end
@@ -89,7 +85,6 @@
         return Keyboard.type(Text('world'));
       }).then(function() {
         assert.equal(editorContent.innerText, 'foobareggshelloworld');
-        done();
       }).then(function() {
 
         // test backspace
@@ -97,8 +92,8 @@
         return Keyboard.type(Keys("⟵").repeat(6));
       }).then(function() {
         assert.equal(editorContent.innerText, 'eggshelloworld');
-        done();
       })
+      .then(done)
       .catch(onerror);
     }
 

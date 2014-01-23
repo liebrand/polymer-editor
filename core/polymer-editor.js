@@ -13,8 +13,6 @@ require([
 
   Polymer('polymer-editor', {
 
-    name: '',
-
     ready: function() {},
 
     enteredView: function() {
@@ -122,8 +120,8 @@ require([
           // normalize any stray text nodes if we got them...
           dp.container.normalize();
 
-          // step 1 - if inside text node; then delete text
-          if (dp.insideTextNode()) {
+          // step 1 - if *inside* text node; then delete text
+          if (dp.insideTextNode() && !dp.onNodeBoundary(context.direction)) {
             var parent = dp.container.parentNode;
             if (parent.supports && parent.supports('deleteNode')) {
               deleteTextInNode_(dp.container, dp.offset-length, length);

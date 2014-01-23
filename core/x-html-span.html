@@ -1,11 +1,13 @@
 
 <link rel="import" href="../../polymer/polymer.html">
 
-<polymer-element name="x-html-p" >
+<link rel="import" href="polymer-editor-content.html">
+
+<polymer-element name="x-html-span" extends="polymer-editor-content">
   <template>
     <style>
       :host {
-        display: block;
+        display: inline;
       }
       * {
       }
@@ -17,17 +19,9 @@
 
   (function() {
 
-    Polymer('x-html-p', {
+    Polymer('x-html-span', {
 
-      ready: function() {
-      },
-
-      enteredView: function() {
-
-      },
     });
-    // ------------------------------------------------------
-
 
   })();
 
