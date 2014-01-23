@@ -4,6 +4,8 @@
 <head>
   <title>Basic Test</title>
 
+  <link rel="stylesheet" href="../css/test.css">
+
   <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
@@ -16,18 +18,11 @@
 </head>
 <body>
 
-  <h3>Introduction</h3>
+  <h3>Basic text insert and delete</h3>
   <p>
     This page tests the basics of &lt;polymer-editor&gt;, in particular
     it inserts text at the start, middle and end of existing text. and also
     verifies that backspace within text will delete characters.
-  </p>
-  <p>
-    <strong>
-      NOTE: at present white-spaces are being collapsed, which is
-      causing problems when you try to add a space at the end (or start)
-      of existing text. We will resolve this for now by using nbsp;
-    </strong>
   </p>
   <hr/>
 

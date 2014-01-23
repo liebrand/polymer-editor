@@ -1,47 +1,48 @@
 <!doctype html>
 <html>
+<meta charset="UTF-8">
 <head>
-  <title>polymer-gmail-example</title>
-  <script src="../../../platform-dev/platform.js"></script>
+  <title>Gmail Example</title>
+
+  <link rel="stylesheet" href="../css/test.css">
+
+  <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
 
-  <script src="../utils/eventUtils.js"></script>
-  <script src="../utils/text.js"></script>
-  <script src="../utils/keys.js"></script>
-  <script src="../utils/keyboard.js"></script>
+  <script src="../../node_modules/requirejs/require.js"></script>
 
-
-  <link rel="import" href="../../examples/gmail/polymer-gmail-quote.html"/>
   <link rel="import" href="../../core/polymer-editor.html"/>
+  <link rel="import" href="../../core/x-html-p.html"/>
+  <link rel="import" href="../../apps/gmail/x-gmail-quote.html"/>
 
 </head>
 <body>
 
+  <h3>GMail block quote example</h3>
+  This example shows how in email, blockquotes can be handled
+  differently than normal HTML blockquotes. In that any edit, in particular
+  an enter key stroke in the middle of a blockquote, will break the quote
+  and allow the user to comment inline.
+
+  <strong>THIS EXAMPLE IS NOT DONE YET - WORK IN PROGRESS</strong>
+
+  <hr/>
+
+
    <polymer-editor id="my-editor">
-    <polymer-editor-content>
-      This example shows how in email, blockquotes can be handled
-      differently than normal HTML blockquotes. In that any edit, in particular
-      an enter key stroke in the middle of a blockquote, will break the quote
-      and allow the user to comment inline.
-
-      <strong style="color:red">THIS EXAMPLE IS NOT DONE YET - WORK IN PROGRESS</strong>
-
-      <hr/>
-
-      <polymer-gmail-quote>
-        <polymer-gmail-paragraph>
-          The first reply to this email
-        </polymer-gmail-paragraph>
-        <polymer-gmail-quote>
-          <polymer-gmail-paragraph>
-            The second reply Which is a bit longer and has multiple paragraphs
-          </polymer-gmail-paragraph>
-          <polymer-gmail-paragraph>
-            So that we can test commenting on the first para of a multi-para quote
-          </polymer-gmail-paragraph>
-      </polymer-gmail-quote>
-    </polymer-editor-content>
+    <x-gmail-quote>
+      <x-html-p>
+        The first reply to this email
+      </x-html-p>
+      <x-gmail-quote>
+        <x-html-p>
+          The original reply to the email. Which is a bit longer and has multiple paragraphs.
+        </x-html-p>
+        <x-html-p>
+          So that we can test breaking a multi line quote to reply to it
+        </x-html-p>
+    </x-gmail-quote>
   </polymer-editor>
 
   <script>

@@ -1,44 +1,48 @@
 <!doctype html>
 <html>
 <head>
-  <title>polymer-word-example</title>
-  <script src="../../../platform-dev/platform.js"></script>
+  <title>MS Word example</title>
+
+  <link rel="stylesheet" href="../css/test.css">
+
+  <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
   <script src="../../../tools/test/chai/chai.js"></script>
 
-  <script src="../utils/eventUtils.js"></script>
-  <script src="../utils/text.js"></script>
-  <script src="../utils/keys.js"></script>
-  <script src="../utils/keyboard.js"></script>
+  <script src="../../node_modules/requirejs/require.js"></script>
 
-
-  <link rel="import" href="../../examples/gmail/polymer-gmail-quote.html"/>
   <link rel="import" href="../../core/polymer-editor.html"/>
+  <link rel="import" href="../../apps/word/x-word-heading.html">
+  <link rel="import" href="../../apps/word/x-word-p.html">
+  <link rel="import" href="../../apps/word/x-word-charrun.html">
 
 </head>
 <body>
 
+  <h3>MS Word headings example</h3>
+  This example shows how in MS Word, Headings should be followed by other
+  styled content. Eg the the "next paragraph style" differs based on the
+  paragrph the user is on. For the purpose of this test, we simply create
+  a normal paragraph after a heading. But ultimately each heading can have
+  it's own style and thereby dictate what style the next node should be.
+  This could easily be achieved with either dedicated css or data binding
+  on the heading element.
+
+  <strong>THIS EXAMPLE IS NOT DONE YET - WORK IN PROGRESS</strong>
+
+  <hr/>
+
    <polymer-editor id="my-editor">
-    <polymer-editor-content>
-      This example shows how in MS Word, Headings should be followed by other
-      styled content. Eg the the "next paragraph style" differs based on the
-      paragrph the user is on. For the purpose of this test, we simply create
-      a normal paragraph after a heading. But ultimately each heading can have
-      it's own style and thereby dictate what style the next node should be.
-      This could easily be achieved with either dedicated css or data binding
-      on the heading element.
-      <polymer-word-heading>This is a heading</polymer-word-heading>
-      <polymer-word-paragraph>
-        <polymer-word-charrun>This is a normal character run</polymer-word-charrun>
-      </polymer-word-paragraph>
-    </polymer-editor-content>
+    <x-word-heading>This is a heading</x-word-heading>
+    <x-word-p>
+      <x-word-charrun>This is a normal character run</x-word-charrun>
+    </x-word-p>
   </polymer-editor>
 
   <script>
 
       // run some tests
 
-    });
   </script>
 </body>
 </html>
