@@ -74,8 +74,10 @@
         // test merging one span in to the previous paragraphs
         placeCaret(spans[2].firstChild, 0);
         return Keyboard.type(Keys("⟵"));
-      // }).then(function() {
-      //   assert.equal(paras[0].innerText, 'helrldsomething elese');
+      }).then(function() {
+        assert.equal(paras[0].innerText, 'helrldsomething else');
+        var newParas = document.querySelectorAll('x-html-p');
+        assert.equal(newParas.length, paras.length -1);
       })
       .then(done)
       .catch(onerror);

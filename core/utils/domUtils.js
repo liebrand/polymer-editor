@@ -41,10 +41,19 @@ define([
       return offset;
     },
 
+    deleteEmptyTree: function(node) {
+      while (this.isEmpty(node)) {
+        var parent = node.parentNode;
+        // TODO(jliebrand): should we do parent.supports('deleteNode') and
+        // node.supports('deleteMe') ??
+        parent.removeChild(node);
+        node = parent;
+      }
+    },
+
     isLeaf: function(node) {
       return node.childNodes.length === 0;
     },
-
 
     /**
      * Determine whether a node's text content is entirely whitespace.
@@ -67,6 +76,16 @@ define([
              ( (node.nodeType == Node.TEXT_NODE) && this.isAllWhiteSpace(node) );
     },
 
+    isEmpty: function(node) {
+      var empty = true;
+      for (var i = node.childNodes.length - 1; i >= 0; i--) {
+        if (!this.isIgnorable(node.childNodes[i])) {
+          empty = false;
+          break;
+        }
+      }
+      return empty;
+    },
 
     /**
      * @return {HTML Element} the previous node in reverse document order, eg:
@@ -108,7 +127,7 @@ define([
         }
       }
       return leaf;
-    },
+    }
   };
 
   return DomUtils;

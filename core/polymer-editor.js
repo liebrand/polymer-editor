@@ -1,10 +1,12 @@
 require([
+  'core/utils/preOrderIter',
   'core/utils/domUtils',
   'core/utils/domPosition',
   'core/events/emitter',
   'core/mock/input',
   'core/mock/selection'
 ], function(
+  PreOrderIter,
   DomUtils,
   DomPosition,
   Emitter,
@@ -131,27 +133,37 @@ require([
             var merge = false;
             var left = dp.leftLeaf();
             var right = dp.rightLeaf();
-            DomUtils.reverseInOrder({
-              start: right,
-              end: left,
-              inclusive: false,
-              callback: function(node) {
-                merge = merge ||
-                    (node.supports && node.supports('mergeOnCrossingBoundary'))
+            var iter = new PreOrderIter(right);
+            while (iter.prev() !== left) {
+              if (iter.current().supports &&
+                  iter.current().supports('mergeOnCrossingBoundary')) {
+                if (iter.current().mergeOnCrossingBoundary()) {
+                  merge = true;
+                  break;
+                }
               }
-            });
+            }
             if (merge) {
               // been told to merge the nodes due to crossing boundary; merge
               // the nodes and then delete empty tree branches
-              if (left.supports && left.supports('mergeNode', right)) {
+              var dp = {};
+              if (left.nodeType === Node.TEXT_NODE) {
+                dp.offset = DomUtils.indexOf(left) + 1;
+                left = left.parentNode;
+                dp.container = left;
+              }
+              if (left.supports && left.supports('mergeNode', {node: right})) {
                 var rightParent = right.parentNode;
-                left.mergeNode(right);
+                left.mergeNode({
+                  node: right,
+                  dp: dp
+                });
                 DomUtils.deleteEmptyTree(rightParent);
               }
             } else {
               if (left.nodeType === Node.TEXT_NODE) {
                 // left leaf is text; delete text inside of it
-                deleteTextInNode_(left, left.textContent-length, length);
+                deleteTextInNode_(left, left.textContent.length-length, length);
               } else {
                 // left leaf is element, delete it (if parent supports it)
                 var leftParent = left.parentNode;

@@ -19,12 +19,23 @@
 
     Polymer('x-html-p', {
 
-      ready: function() {
+      supports: function(editIntent, context) {
+        switch (editIntent) {
+          case 'mergeOnCrossingBoundary':
+            return true;
+            break;
+          default:
+            return this.super(arguments);
+            break;
+        }
       },
 
-      enteredView: function() {
+      mergeOnCrossingBoundary: function() {
+        // TODO(jliebrand): should this get a context object?
+        // doesn't seem to need it?
+        return true;
+      }
 
-      },
     });
     // ------------------------------------------------------
 
