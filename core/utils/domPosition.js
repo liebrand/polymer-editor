@@ -72,7 +72,7 @@ define([
 
       if (container.childNodes.length === 0) {
         // inside an empty element
-        return DomUtils.previousNode(container);
+        return DomUtils.previousLeaf(container);
       }
       if (offset > 0 && offset === container.length) {
         // at the end of our own children, the last one is thus the leftLeaf
@@ -80,7 +80,7 @@ define([
       } else {
         // else walk the tree for left leaf
         var rightLeaf = container.childNodes[offset];
-        return DomUtils.previousNode(rightLeaf);
+        return DomUtils.previousLeaf(rightLeaf);
       }
     },
 
@@ -104,14 +104,14 @@ define([
 
       if (container.childNodes.length === 0) {
         // inside an empty element
-        return DomUtils.nextNode(container);
+        return DomUtils.nextLeaf(container);
       }
       var rightLeaf = container.childNodes[offset];
       if (rightLeaf) {
         return rightLeaf;
       } else {
         var leftLeaf = container.childNodes[offset-1];
-        return DomUtils.nextNode(leftLeaf);
+        return DomUtils.nextLeaf(leftLeaf);
       }
     }
   };

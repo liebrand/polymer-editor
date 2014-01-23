@@ -1,5 +1,7 @@
 
-define([], function() {
+define([
+  'core/utils/preOrderIter'
+  ], function(PreOrderIter) {
 
   'use strict';
 
@@ -39,6 +41,33 @@ define([], function() {
       return offset;
     },
 
+    isLeaf: function(node) {
+      return node.childNodes.length === 0;
+    },
+
+
+    /**
+     * Determine whether a node's text content is entirely whitespace.
+     * Where whitespace is defined as one of the characters
+     *  "\t" TAB \u0009
+     *  "\n" LF  \u000A
+     *  "\r" CR  \u000D
+     *  " "  SPC \u0020
+     *
+     * This does not use Javascript's "\s" because that includes non-breaking
+     * spaces (and also some other characters).
+     *
+     */
+    isAllWhiteSpace: function(node) {
+      return !(/[^\t\n\r ]/.test(node.textContent));
+    },
+
+    isIgnorable: function(node) {
+      return ( node.nodeType == Node.COMMENT_NODE) ||
+             ( (node.nodeType == Node.TEXT_NODE) && this.isAllWhiteSpace(node) );
+    },
+
+
     /**
      * @return {HTML Element} the previous node in reverse document order, eg:
      *
@@ -51,34 +80,34 @@ define([], function() {
      *                      /
      *                     H
      *
-     *  previousNode(C) === E
-     *  previousNode(G) === H
-     *  previousNode(F) === E
-     *  previousNode(E) === D
+     *  previousLeaf(C) === E
+     *  previousLeaf(G) === H
+     *  previousLeaf(F) === E
+     *  previousLeaf(E) === D
      */
-    previousNode: function(srcNode) {
-      var prevNode = srcNode ? srcNode.previousSibling : undefined;
-      while (!prevNode && srcNode && srcNode.parentNode) {
-        srcNode = srcNode.parentNode;
-        prevNode = srcNode.previousSibling;
+    previousLeaf: function(srcNode) {
+      // get previous "non-white-space-only" leaf
+      var leaf;
+      var iter = new PreOrderIter(srcNode);
+      while((leaf = iter.prev())) {
+        if (this.isLeaf(leaf) && !this.isIgnorable(leaf)) {
+          break;
+        }
       }
-      while (prevNode && prevNode.lastChild) {
-        prevNode = prevNode.lastChild;
-      }
-      return prevNode;
+      return leaf;
     },
 
-    // opposite of previousNode
-    nextNode: function(srcNode) {
-      var nextNode = srcNode ? srcNode.nextSibling : undefined;
-      while (!nextNode && srcNode && srcNode.parentNode) {
-        srcNode = srcNode.parentNode;
-        nextNode = srcNode.nextSibling;
+    // opposite of previousLeaf
+    nextLeaf: function(srcNode) {
+      // get previous "non-white-space-only" leaf
+      var leaf;
+      var iter = new PreOrderIter(srcNode);
+      while((leaf = iter.next())) {
+        if (this.isLeaf(leaf) && !this.isIgnorable(leaf)) {
+          break;
+        }
       }
-      while (nextNode && nextNode.firstChild) {
-        nextNode = nextNode.firstChild;
-      }
-      return nextNode;
+      return leaf;
     },
   };
 
