@@ -26,9 +26,7 @@
   </p>
   <hr/>
 
-  <polymer-editor id="my-editor">
-    <polymer-editor-content>hello</polymer-editor-content>
-  </polymer-editor>
+  <polymer-editor id="my-editor">hello</polymer-editor>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -43,14 +41,10 @@
     'test/utils/keys',
     ], function(EventUtils, Keyboard, Text, Keys) {
 
-    // hard codes the element placement based on above html
-    function placeCaret(offset) {
-      var editor = document.querySelector('#my-editor');
-      var content = editor.firstElementChild;
-      var contentTextNode = content.firstChild;
+    function placeCaret(node, offset) {
       var range = document.createRange();
-      range.setStart(contentTextNode, offset);
-      range.setEnd(contentTextNode, offset);
+      range.setStart(node, offset);
+      range.setEnd(node, offset);
       window.getSelection().removeAllRanges();
       window.getSelection().addRange(range);
     }
@@ -60,33 +54,33 @@
       // make sure we have an editor - should probably test more than
       // just the fact the element is defined... ?
       var editor = document.querySelector('#my-editor');
-      var editorContent = document.querySelector('polymer-editor-content');
+      var editor = document.querySelector('polymer-editor');
       assert.isDefined(editor, 'our editor is defined');
 
       // test insert text at start
-      placeCaret(0);
+      placeCaret(editor.firstChild, 0);
       Keyboard.type(Text('foobar')).then(function(a) {
-        assert.equal(editorContent.innerText, 'foobarhello');
+        assert.equal(editor.innerText, 'foobarhello');
       }).then(function() {
         // test insert text in the middle
-        placeCaret(6);
+        placeCaret(editor.firstChild, 6);
         return Keyboard.type(Text('eggs'));
       }).then(function() {
-        assert.equal(editorContent.innerText, 'foobareggshello');
+        assert.equal(editor.innerText, 'foobareggshello');
       }).then(function() {
 
         // test insert text at the end
-        placeCaret(editorContent.innerText.length);
+        placeCaret(editor.firstChild, editor.innerText.length);
         return Keyboard.type(Text('world'));
       }).then(function() {
-        assert.equal(editorContent.innerText, 'foobareggshelloworld');
+        assert.equal(editor.innerText, 'foobareggshelloworld');
       }).then(function() {
 
         // test backspace
-        placeCaret(6);
+        placeCaret(editor.firstChild, 6);
         return Keyboard.type(Keys("⟵").repeat(6));
       }).then(function() {
-        assert.equal(editorContent.innerText, 'eggshelloworld');
+        assert.equal(editor.innerText, 'eggshelloworld');
       })
       .then(done)
       .catch(onerror);

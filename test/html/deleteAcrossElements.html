@@ -30,13 +30,13 @@
   <hr/>
 
   <polymer-editor id="my-editor">
-    <polymer-editor-content>
-      <x-html-p>
-        <x-html-span>hello</x-html-span><x-html-span>world</x-html-span>
-      </x-html-p><x-html-p>
+    <x-html-p>
+      <x-html-span>hello</x-html-span><x-html-span>world</x-html-span>
+    </x-html-p>
+    <x-html-p>
       <x-html-span>something else</x-html-span>
     </x-html-p>
-  </polymer-editor-content></polymer-editor>
+  </polymer-editor>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -61,9 +61,9 @@
 
     function test() {
 
-      var editorContent = document.querySelector('polymer-editor-content');
-      var paras = editorContent.querySelectorAll('x-html-p');
-      var spans = editorContent.querySelectorAll('x-html-span');
+      var editor = document.querySelector('polymer-editor');
+      var paras = editor.querySelectorAll('x-html-p');
+      var spans = editor.querySelectorAll('x-html-span');
 
       // delete from 2nd span in to 1st span
       placeCaret(spans[1].firstChild, 2);

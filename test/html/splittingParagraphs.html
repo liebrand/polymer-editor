@@ -30,11 +30,10 @@
   <hr/>
 
   <polymer-editor id="my-editor">
-    <polymer-editor-content>
-      <x-html-p>
-        <x-html-span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</x-html-span>
-      </x-html-p>
-  </polymer-editor-content></polymer-editor>
+    <x-html-p>
+      <x-html-span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</x-html-span>
+    </x-html-p>
+  </polymer-editor>
 
   <script type="text/javascript" charset="utf-8">
 
@@ -59,15 +58,15 @@
 
     function test() {
 
-      var editorContent = document.querySelector('polymer-editor-content');
-      var spans = editorContent.querySelectorAll('x-html-span');
+      var editor = document.querySelector('polymer-editor');
+      var spans = editor.querySelectorAll('x-html-span');
 
       // hit enter in the middle of the paragraph (10 characters in)
       placeCaret(spans[0].firstChild, 10);
       Keyboard.type(Keys("↵"))
         .then(function() {
 
-        var paras = editorContent.querySelectorAll('x-html-p');
+        var paras = editor.querySelectorAll('x-html-p');
         assert.equal(paras.length, 2);
         assert.equal(paras[0].innerText, 'Lorem ipsu');
         assert.equal(paras[1].innerText, 'm dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
