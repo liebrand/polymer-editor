@@ -1,0 +1,40 @@
+
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../core/polymer-editor-content.html">
+
+<polymer-element name="x-gmail-reply" extends="polymer-editor-content">
+  <template>
+    <style>
+      :host {
+      }
+    </style>
+    <content></content>
+  </template>
+
+  <script>
+
+    Polymer('x-gmail-reply', {
+
+      supports: function(editIntent, context) {
+        switch (editIntent) {
+          case 'splitNode':
+            // once the tree has split up to this x-gmail-reply,
+            // we add an empty paragraph at the split point, but we
+            // do not support "splitting" the actual reply element; so
+            // we return false
+            var emptyP = document.createElement('x-html-p');
+            this.insertNode({dp: context.dp, node: emptyP});
+            return false;
+            break;
+
+          default:
+            return this.super(arguments);
+            break;
+        }
+      },
+
+    });
+    // ------------------------------------------------------
+
+  </script>
+</polymer-element>

@@ -14,6 +14,7 @@
 
   <link rel="import" href="../../core/polymer-editor.html"/>
   <link rel="import" href="../../core/x-html-p.html"/>
+  <link rel="import" href="../../apps/gmail/x-gmail-reply.html"/>
   <link rel="import" href="../../apps/gmail/x-gmail-quote.html"/>
 
 </head>
@@ -25,30 +26,86 @@
   an enter key stroke in the middle of a blockquote, will break the quote
   and allow the user to comment inline.
 
-  <strong>THIS EXAMPLE IS NOT DONE YET - WORK IN PROGRESS</strong>
-
   <hr/>
 
 
-   <polymer-editor id="my-editor">
-    <x-gmail-quote>
-      <x-html-p>
-        The first reply to this email
-      </x-html-p>
+  <polymer-editor id="my-editor">
+    <x-gmail-reply>
       <x-gmail-quote>
         <x-html-p>
-          The original reply to the email. Which is a bit longer and has multiple paragraphs.
+          The second reply to this email
         </x-html-p>
-        <x-html-p>
-          So that we can test breaking a multi line quote to reply to it
-        </x-html-p>
-    </x-gmail-quote>
+        <x-gmail-quote>
+          <x-html-p id="nestedReply">
+            The original reply to the email. Which is a bit longer so
+            that we can test breaking a multi line quote to reply to it
+          </x-html-p>
+      </x-gmail-quote>
+    </x-gmail-reply>
   </polymer-editor>
 
   <script>
 
-      // run some tests
+  require.config({
+      baseUrl: "../../"
+    });
 
+  require([
+    'test/utils/eventUtils',
+    'test/utils/keyboard',
+    'test/utils/text',
+    'test/utils/keys',
+    ], function(EventUtils, Keyboard, Text, Keys) {
+
+    function placeCaret(node, offset) {
+      var range = document.createRange();
+      range.setStart(node, offset);
+      range.setEnd(node, offset);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+
+    function test() {
+
+      var editor = document.querySelector('polymer-editor');
+      var nestedReply = document.getElementById('nestedReply');
+
+      // hit enter in the middle of the nested reply. This should
+      // split the block quote and produce a blank <p> in the middle
+      // of the split blockquote
+      placeCaret(nestedReply.firstChild, 25);
+      Keyboard.type(Keys("↵"))
+        .then(function() {
+
+        // should have split the block quote and added an empty
+        // paragraph at root level. Eg, structure should be:
+        //
+        // qoute
+        //   para - the second reply
+        //   quote
+        //     para - the start of original reply
+        // para - empty
+        // quote
+        //   quote
+        //     para - the end of the origina reply
+        var strippedHtml = editor.innerHTML.replace(/\s/g, '');
+        assert.equal(strippedHtml, '<x-gmail-reply><x-gmail-quote><x-html-p>Thesecondreplytothisemail</x-html-p><x-gmail-quote><x-html-pid="nestedReply">Theoriginal</x-html-p></x-gmail-quote></x-gmail-quote><x-html-p></x-html-p><x-gmail-quote><x-gmail-quote><x-html-pid="nestedReply">replytotheemail.Whichisabitlongersothatwecantestbreakingamultilinequotetoreplytoit</x-html-p></x-gmail-quote></x-gmail-quote></x-gmail-reply>');
+
+      })
+      .then(done)
+      .catch(onerror);
+    }
+
+    var assert = chai.assert;
+    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
+    // done loading all modules (right?!) so it would fire too soon for
+    // us to run the test
+    // document.addEventListener('WebComponentsReady', test);
+
+    // just wait a second for now; fix this though!
+    setTimeout(test, 1000);
+
+  });
   </script>
 </body>
 </html>
