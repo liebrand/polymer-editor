@@ -21,11 +21,14 @@ define(['core/utils/domPosition'], function(DomPosition) {
     },
 
     setStartDomPosition: function(domPosition) {
-      var range = document.createRange();
-      range.setStart(domPosition.container, domPosition.offset);
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+      if (domPosition &&
+          domPosition.container && domPosition.offset !== undefined) {
+        var range = document.createRange();
+        range.setStart(domPosition.container, domPosition.offset);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
     },
 
     walkUp: function(callback) {

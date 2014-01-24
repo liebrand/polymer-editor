@@ -1,11 +1,12 @@
 
 <link rel="import" href="../../polymer/polymer.html">
 
-<polymer-element name="x-html-p" >
+<polymer-element name="x-html-p" extends="polymer-editor-content">
   <template>
     <style>
       :host {
         display: block;
+        min-height: 1em;
       }
       * {
       }
@@ -35,6 +36,7 @@
         // doesn't seem to need it?
         return true;
       }
+
 
     });
     // ------------------------------------------------------

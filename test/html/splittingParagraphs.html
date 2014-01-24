@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<meta charset="UTF-8">
+<head>
+  <title>Splitting paragraphs Test</title>
+
+  <link rel="stylesheet" href="../css/test.css">
+
+  <script src="../../../platform/platform.js"></script>
+  <script src="../../../tools/test/htmltest.js"></script>
+  <script src="../../../tools/test/chai/chai.js"></script>
+
+  <script src="../../node_modules/requirejs/require.js"></script>
+
+  <link rel="import" href="../../core/polymer-editor.html"/>
+  <link rel="import" href="../../core/polymer-editor-content.html">
+
+  <link rel="import" href="../../core/x-html-p.html">
+  <link rel="import" href="../../core/x-html-span.html">
+
+</head>
+<body>
+
+  <h3>Splitting paragraphs - aka "new following paragraph"</h3>
+  <p>
+    This page tests the ability to "split" text from one paragraph
+    into a new paragraph.
+  </p>
+
+  <hr/>
+
+  <polymer-editor id="my-editor">
+    <polymer-editor-content>
+      <x-html-p>
+        <x-html-span>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</x-html-span>
+      </x-html-p>
+  </polymer-editor-content></polymer-editor>
+
+  <script type="text/javascript" charset="utf-8">
+
+  require.config({
+      baseUrl: "../../"
+    });
+
+  require([
+    'test/utils/eventUtils',
+    'test/utils/keyboard',
+    'test/utils/text',
+    'test/utils/keys',
+    ], function(EventUtils, Keyboard, Text, Keys) {
+
+    function placeCaret(node, offset) {
+      var range = document.createRange();
+      range.setStart(node, offset);
+      range.setEnd(node, offset);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+
+    function test() {
+
+      var editorContent = document.querySelector('polymer-editor-content');
+      var spans = editorContent.querySelectorAll('x-html-span');
+
+      // hit enter in the middle of the paragraph (10 characters in)
+      placeCaret(spans[0].firstChild, 10);
+      Keyboard.type(Keys("↵"))
+        .then(function() {
+
+        var paras = editorContent.querySelectorAll('x-html-p');
+        assert.equal(paras.length, 2);
+        assert.equal(paras[0].innerText, 'Lorem ipsu');
+        assert.equal(paras[1].innerText, 'm dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
+      })
+      .then(done)
+      .catch(onerror);
+    }
+
+    var assert = chai.assert;
+    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
+    // done loading all modules (right?!) so it would fire too soon for
+    // us to run the test
+    // document.addEventListener('WebComponentsReady', test);
+
+    // just wait a second for now; fix this though!
+    setTimeout(test, 1000);
+
+  });
+
+  </script>
+</body>
+</html>

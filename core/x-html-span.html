@@ -28,6 +28,7 @@
             // any type of inline element?
             return context.node.nodeType === Node.TEXT_NODE;
             break;
+
           default:
             return this.super(arguments);
             break;
@@ -38,7 +39,7 @@
         // insertNode will use appendChild or insertBefore; both of which
         // will ensure the context.node gets MOVED if it was already in the dom
         this.insertNode(context);
-      }
+      },
 
     });
 

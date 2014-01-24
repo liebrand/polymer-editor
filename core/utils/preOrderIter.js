@@ -28,7 +28,7 @@ define([], function() {
 
     getNext_: function() {
       var ref = this.current_;
-      var next = ref.firstChild;
+      var next = ref ? ref.firstChild : undefined;
       while (!next && ref) {
         next = ref.nextSibling;
         ref = ref.parentNode;
@@ -38,7 +38,7 @@ define([], function() {
 
     getPrev_: function() {
       var ref = this.current_;
-      var prev = ref.previousSibling;
+      var prev = ref ? ref.previousSibling : undefined;
       while (prev && prev.lastChild) {
         prev = prev.lastChild;
       }

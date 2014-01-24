@@ -1,11 +1,13 @@
 
 <link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../core/polymer-editor-content.html">
 
-<polymer-element name="x-word-p">
+<polymer-element name="x-word-p" extends="polymer-editor-content">
   <template>
     <style>
       :host {
         display: block;
+        min-height: 1em;
       }
     </style>
     <content></content>

@@ -180,6 +180,52 @@ require([
 
       });
 
+      this.emitter_.on('splitTree', function(context) {
+        var dp = Selection.startDomPosition()
+
+        if (dp.insideTextNode()) {
+          var tnOffset = DomUtils.splitText(dp.container, dp.offset);
+          dp = new DomPosition(dp.container.parentNode, tnOffset);
+          Selection.setStartDomPosition(dp);
+        }
+
+        Selection.walkUp(function(node) {
+
+          if (node.nodeType !== Node.TEXT_NODE) {
+            if (node.supports && node.supports('splitNode', {dp: dp})) {
+
+              var parent = node.parentNode;
+              // TODO(jliebrand): should really pass the insertContext to
+              // the parent to decide if it supports inserting that particular
+              // context. But that would mean splitting node before knowing
+              // if the parent can accept it. Which in turn would mean
+              // reverting the split if it doesn't support it. For this POC
+              // I'm cheating and just asking if the parent supports insertNode
+              // in general... good enough for the POC, but this would have to
+              // be made smarter in the real version...
+              if (parent.supports &&
+                  parent.supports('insertNode')) {
+
+                var newFrag = node.splitNode({dp: dp});
+                dp = new DomPosition(parent, DomUtils.indexOf(node) + 1);
+                var insertContext ={
+                  node: newFrag,
+                  dp: dp
+                };
+
+                parent.insertNode(insertContext);
+              }
+
+            } else {
+              // stop walking the tree, we've reached the end of the nodes
+              // that support splitting the tree
+              return true;
+            }
+          }
+        });
+        Selection.setStartDomPosition(dp);
+      });
+
     }
 
   });

@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<meta charset="UTF-8">
 <head>
   <title>MS Word example</title>
 
@@ -33,7 +34,7 @@
   <hr/>
 
    <polymer-editor id="my-editor">
-    <x-word-heading>This is a heading</x-word-heading>
+    <x-word-heading id="myHeading">This is a heading</x-word-heading>
     <x-word-p>
       <x-word-charrun>This is a normal character run</x-word-charrun>
     </x-word-p>
@@ -41,8 +42,78 @@
 
   <script>
 
-      // run some tests
+    require.config({
+        baseUrl: "../../"
+      });
 
+    require([
+      'test/utils/eventUtils',
+      'test/utils/keyboard',
+      'test/utils/text',
+      'test/utils/keys',
+      ], function(EventUtils, Keyboard, Text, Keys) {
+
+      function placeCaret(node, offset) {
+        var range = document.createRange();
+        range.setStart(node, offset);
+        range.setEnd(node, offset);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      }
+
+      function test() {
+
+        var editor = document.querySelector('polymer-editor');
+        var heading = document.getElementById('myHeading');
+
+        // hit enter in the middle of the Heading. This should
+        // create a second heading; eg split it
+        placeCaret(heading.firstChild, 10);
+        Keyboard.type(Keys("↵"))
+          .then(function() {
+
+          // should still have one paragraph
+          var paras = editor.querySelectorAll('x-word-p');
+          assert.equal(paras.length, 1);
+
+          // but two headings
+          var headings = editor.querySelectorAll('x-word-heading');
+          assert.equal(headings.length, 2);
+
+          assert.equal(headings[0].innerText, 'This is a');
+          assert.equal(headings[1].innerText, 'heading');
+        })
+        .then(function() {
+          // now test creating a new x-word-p when hitting enter
+          // at the end of the heading
+          var newHeading = editor.querySelectorAll('x-word-heading')[1];
+          var newHeadingTn = newHeading.firstChild;
+          placeCaret(newHeadingTn, newHeadingTn.textContent.length);
+          return Keyboard.type(Keys("↵"));
+        })
+        .then(function() {
+
+          // now there should be two paragraphs and two headings
+          var paras = editor.querySelectorAll('x-word-p');
+          var headings = editor.querySelectorAll('x-word-heading');
+          assert.equal(paras.length, 2);
+          assert.equal(headings.length, 2);
+
+        })
+        .then(done)
+        .catch(onerror);
+      }
+
+      var assert = chai.assert;
+      // TODO(jliebrand): WebComponentsReady fires before the requireJs is
+      // done loading all modules (right?!) so it would fire too soon for
+      // us to run the test
+      // document.addEventListener('WebComponentsReady', test);
+
+      // just wait a second for now; fix this though!
+      setTimeout(test, 1000);
+
+    });
   </script>
 </body>
 </html>

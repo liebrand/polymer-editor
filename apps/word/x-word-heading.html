@@ -1,12 +1,14 @@
 
 <link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../core/polymer-editor-content.html">
 
-<polymer-element name="x-word-heading">
+<polymer-element name="x-word-heading" extends="polymer-editor-content">
   <template>
     <style>
       :host {
         display: block;
         font-size: 2em;
+        min-height: 1em;
       }
     </style>
     <content></content>
@@ -14,10 +16,34 @@
 
   <script>
 
+  require([
+    'core/utils/domUtils'
+  ], function(
+    DomUtils
+    ) {
+
     Polymer('x-word-heading', {
+
+      // MS Word heading will return a new x-word-p if the
+      // DomPosition is at the end of this heading. If the dp is
+      // not at the end, it will return another heading
+      splitNode: function(context) {
+        // clone ourselves, so that we maintain the same styling
+        var frag = document.createDocumentFragment();
+        var rightChild = this.childNodes[context.dp.offset];
+        var newNode = (!rightChild || DomUtils.isIgnorable(rightChild)) ?
+            document.createElement('x-word-p') :
+            this.cloneNode();
+        frag.appendChild(newNode);
+
+        this.moveChildren_(newNode, context.dp);
+        return frag;
+      }
 
     });
     // ------------------------------------------------------
+
+  });
 
   </script>
 </polymer-element>
