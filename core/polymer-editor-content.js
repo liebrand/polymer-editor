@@ -1,10 +1,37 @@
 (function() {
 
+  var SPLIT_TREE = {
+    editIntent: 'splitTree'
+  };
+  var DELETE_CHAR = {
+    editIntent: 'delete',
+    context: {
+      direction: 'backward',
+      textBoundaryRegEx: /./
+    }
+  };
+  var DELETE_WORD = {
+    editIntent: 'delete',
+    context: {
+      direction: 'backward',
+      textBoundaryRegEx: /[^\s]*\s/
+    }
+  };
+
   Polymer('polymer-editor-content', {
 
-    ready: function() {},
-
-    enteredView: function() {},
+    shortCuts: {
+      'mac' : {
+        '↵': SPLIT_TREE,
+        '⟵': DELETE_CHAR,
+        '⌘ ⟵': DELETE_WORD
+      },
+      'win': {
+        '↵': SPLIT_TREE,
+        '⟵': DELETE_CHAR,
+        'ctrl ⟵': DELETE_WORD
+      }
+    },
 
 
     /**

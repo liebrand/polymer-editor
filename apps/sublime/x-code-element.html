@@ -1,0 +1,54 @@
+
+<meta charset="UTF-8">
+
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../core/polymer-editor-content.html">
+
+<polymer-element name="x-code-element" extends="polymer-editor-content">
+  <template>
+    <style>
+      :host {
+        display: inline;
+        font-family: monospace;
+        color: blue;
+      }
+    </style>
+    <content></content>
+  </template>
+
+  <script>
+
+    var DELETE_CAMEL = {
+      editIntent: 'delete',
+      context: {
+        direction: 'backward',
+        textBoundaryRegEx: /[^A-Z]*[A-Z]/
+      }
+    };
+    var DELETE_WORD = {
+      editIntent: 'delete',
+      context: {
+        direction: 'backward',
+        textBoundaryRegEx: /[^\s]*\s/
+      }
+    };
+
+
+    Polymer('x-code-element', {
+
+      // TODO(jliebrand): find a better solution like
+      // shortCuts: extend(this.super)
+      // or something to allow overriding only the shortcuts
+      // you are interested in
+      shortCuts: {
+        'mac' : {
+          '⌘ ⟵': DELETE_WORD,
+          'ctrl ⟵': DELETE_CAMEL
+        }
+      }
+
+    });
+    // ------------------------------------------------------
+
+  </script>
+</polymer-element>

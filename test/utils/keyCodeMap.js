@@ -116,7 +116,8 @@ define([], function() {
       'right': 'Right',
       'down': 'Down',
       'delete': 'U+007F',
-      'meta': 'Meta'
+      'meta': 'Meta',
+      'command': 'Meta'
     };
 
     function makeUnicodeId_(keyCode) {
@@ -147,13 +148,14 @@ define([], function() {
         return aliases_[alias] || alias;
       },
       getKeyObject: function(keyName) {
+        var name = this.parseAlias(keyName);
         return {
-          name: this.parseAlias(keyName),
-          textInput: textInput_[keyName],
-          charCode: charCodes_[keyName],
-          keyCode: keyCodes_[keyName],
-          keyIdentifier: keyIds_[keyName],
-          which: keyCodes_[keyName]
+          name: name,
+          textInput: textInput_[name],
+          charCode: charCodes_[name],
+          keyCode: keyCodes_[name],
+          keyIdentifier: keyIds_[name],
+          which: keyCodes_[name]
         };
       }
     };

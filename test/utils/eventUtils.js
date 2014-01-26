@@ -36,20 +36,17 @@ define([], function() {
 
   var EventUtils = {
 
-    makeEvent: function(key, type, delay) {
-      if (delay === undefined) {
-        delay = 10;
-      }
+    makeEvent: function(key, type, modifiers) {
       return new Promise(function(resolve, reject) {
 
         window.setTimeout(function() {
           try {
-            document.body.dispatchEvent(makeKeyBoardEvent_(key, type));
+            document.body.dispatchEvent(makeKeyBoardEvent_(key, type, modifiers));
             resolve();
           } catch (e) {
             reject(e);
           }
-        }, delay);
+        }, 10);
 
       });
     }

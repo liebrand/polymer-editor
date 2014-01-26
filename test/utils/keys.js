@@ -43,10 +43,19 @@ define([
       for (var i = 0; i < this.repeatCount; i++) {
         for (var k = 0; k < types.length; k++) {
           var type = types[k];
+          // first loop through the keys to find the special modifiers
+          var modifiers = {};
           for (var j = 0; j < this.keysToPress.length; j++) {
             var keyToPress = KeyCodeMap.getKeyObject(this.keysToPress[j]);
-            chain = chain.then(
-              EventUtils.makeEvent.bind(null, keyToPress, type));
+            modifiers[keyToPress.keyIdentifier.toLowerCase()] = true;
+          }
+
+          for (var j = 0; j < this.keysToPress.length; j++) {
+            var keyToPress = KeyCodeMap.getKeyObject(this.keysToPress[j]);
+            if (keyToPress.keyCode !== undefined) {
+              chain = chain.then(
+                EventUtils.makeEvent.bind(null, keyToPress, type, modifiers));
+            }
           }
         }
       }

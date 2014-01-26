@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<meta charset="UTF-8">
+<head>
+  <title>Delete CamelCase (eg sublime)</title>
+
+  <link rel="stylesheet" href="../css/test.css">
+
+  <script src="../../../platform/platform.js"></script>
+  <script src="../../../tools/test/htmltest.js"></script>
+  <script src="../../../tools/test/chai/chai.js"></script>
+
+  <script src="../../node_modules/requirejs/require.js"></script>
+
+  <link rel="import" href="../../core/polymer-editor.html"/>
+
+  <link rel="import" href="../../apps/sublime/x-code-element.html">
+
+</head>
+<body>
+
+  <h3>Delete CamelCase - (eg sublime use case)</h3>
+  <p>
+    This page tests the ability for elements to specify different
+    intents, or rather different contexts for an intent. In this
+    example we use an x-code-element to make cmd-delete only delete
+    the next camel case section, rather than the whole word
+  </p>
+  <em>
+    Note: for POC the cmd-delete only checks for camelCase; no other
+    keyword boundaries like ; are looked for...
+  </em>
+
+  <hr/>
+
+  <polymer-editor id="my-editor">
+    <x-code-element id="test">var mySuperSimpleTestCamelCasedVar</x-code-element>
+  </polymer-editor>
+
+  <script type="text/javascript" charset="utf-8">
+
+  require.config({
+      baseUrl: "../../"
+    });
+
+  require([
+    'test/utils/eventUtils',
+    'test/utils/keyboard',
+    'test/utils/text',
+    'test/utils/keys',
+    ], function(EventUtils, Keyboard, Text, Keys) {
+
+    function placeCaret(node, offset) {
+      var range = document.createRange();
+      range.setStart(node, offset);
+      range.setEnd(node, offset);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    }
+
+    function test() {
+
+      var testElement = document.getElementById('test');
+
+      // delete from 2nd span in to 1st span
+      placeCaret(testElement.firstChild, testElement.innerText.length);
+      Keyboard.type(Keys("ctrl", "⟵"))
+        .then(function(a) {
+
+        assert.equal(testElement.innerText, 'var mySuperSimpleTestCamelCased');
+      }).then(function() {
+
+        return Keyboard.type(Keys("ctrl", "⟵"))
+      }).then(function() {
+
+        assert.equal(testElement.innerText, 'var mySuperSimpleTestCamel');
+      })
+      .then(done)
+      .catch(onerror);
+    }
+
+    var assert = chai.assert;
+    // TODO(jliebrand): WebComponentsReady fires before the requireJs is
+    // done loading all modules (right?!) so it would fire too soon for
+    // us to run the test
+    // document.addEventListener('WebComponentsReady', test);
+
+    // just wait a second for now; fix this though!
+    setTimeout(test, 1000);
+
+  });
+
+  </script>
+</body>
+</html>

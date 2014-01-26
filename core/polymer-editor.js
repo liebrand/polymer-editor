@@ -1,6 +1,7 @@
 require([
   'core/utils/preOrderIter',
   'core/utils/domUtils',
+  'core/utils/stringUtils',
   'core/utils/domPosition',
   'core/events/emitter',
   'core/mock/input',
@@ -8,11 +9,11 @@ require([
 ], function(
   PreOrderIter,
   DomUtils,
+  StringUtils,
   DomPosition,
   Emitter,
   Input,
   Selection) {
-
   Polymer('polymer-editor', {
 
     ready: function() {},
@@ -97,24 +98,15 @@ require([
        *
        * @param {object} context contains contextual information:
        * @param {string} context.direction which way to delete
-       * @param {string} context.granularity indicates how far to delete, which
+       * @param {string} context.textBoundaryRegEx indicates how far to delete,
        *                                     is ONLY used when inside text node
-       *                                     eg: 'char', 'word', 'boundary'
-       * @param {string} context.boundaryRegEx optional item containing a
-       *                                       regex to define what boundary
-       *                                       to look for (eg '\w', or '[^$]')
-       *                                       (think sublime use case!)
+       *                                     and then used as a reverse regex
        */
       this.emitter_.on('delete', function(context) {
         // TODO(jliebrand): Break this mamoth function up in smaller bits!
 
         // TODO(jliebrand): need to support direction better; too much
         // harcoded 'left' stuff!
-
-        // TODO(jliebrand): fix this to use context.boundaryRegEx
-        var WORDLENGTH = 4;
-        var length = context.direction === 'forward' ? 0 :
-          context.granularity === 'word' ? WORDLENGTH : 1;
 
         var dp = Selection.startDomPosition();
 
@@ -126,7 +118,8 @@ require([
           if (dp.insideTextNode() && !dp.onNodeBoundary(context.direction)) {
             var parent = dp.container.parentNode;
             if (parent.supports && parent.supports('deleteNode')) {
-              deleteTextInNode_(dp.container, dp.offset-length, length);
+              deleteTextInNode_(dp.container, dp.offset,
+                  context.direction, context.textBoundaryRegEx);
             }
           } else {
             // step 2 - get left/right leaf and determine if we need to merge
@@ -163,7 +156,8 @@ require([
             } else {
               if (left.nodeType === Node.TEXT_NODE) {
                 // left leaf is text; delete text inside of it
-                deleteTextInNode_(left, left.textContent.length-length, length);
+                deleteTextInNode_(left, left.textContent.length,
+                    context.direction, context.textBoundaryRegEx);
               } else {
                 // left leaf is element, delete it (if parent supports it)
                 var leftParent = left.parentNode;
@@ -241,10 +235,26 @@ require([
 
   });
 
-  function deleteTextInNode_(tn, offset, length) {
+  function deleteTextInNode_(tn, offset, direction, textBoundaryRegEx) {
+    // TODO(jliebrand): there's probably a better way to do reverse
+    // regex, but i found reversing the string works fast enough for this POC
+    var length = 1;
+    if (direction === 'backward') {
+      var textUpToOffset = tn.textContent.substring(0, offset);
+      var reverseContent = textUpToOffset.split('').reverse().join('');
+      var matches = reverseContent.match(textBoundaryRegEx);
+      if (matches) {
+        length = matches[0].length || 1;
+      }
+    }
+
+    // TODO(jliebrand): this boundary code only really works on
+    // backspace, not sure if it should? think about this for
+    // real code (good enough for POC)
+
     var parent = tn.parentNode;
     if (tn.nodeType === Node.TEXT_NODE) {
-      var tnOffset = DomUtils.splitText(tn, offset, length);
+      var tnOffset = DomUtils.splitText(tn, offset-length, length);
       var context = {
         dp: {
           container: parent,
