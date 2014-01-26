@@ -19,11 +19,21 @@
         switch (editIntent) {
           case 'splitNode':
             // once the tree has split up to this x-gmail-reply,
-            // we add an empty paragraph at the split point, but we
+            // and the history shows that we have split block quotes
+            // as we came up, then we need to add an empty paragraph at the
+            // split point
+            for (var i = 0; i < context.history.length; i++) {
+              var newFrag = context.history[i];
+              var bqs = newFrag.querySelectorAll('x-gmail-quote');
+              if (bqs.length > 0) {
+                var emptyP = document.createElement('x-html-p');
+                this.insertNode({dp: context.dp, node: emptyP});
+                break;
+              }
+            }
+
             // do not support "splitting" the actual reply element; so
             // we return false
-            var emptyP = document.createElement('x-html-p');
-            this.insertNode({dp: context.dp, node: emptyP});
             return false;
             break;
 

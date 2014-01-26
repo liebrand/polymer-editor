@@ -189,10 +189,20 @@ require([
           Selection.setStartDomPosition(dp);
         }
 
+        // keep a history of all the fragments that have been created
+        // as we walk up the tree. Which allows each node to make an
+        // informed decision about whether or not further splitting is
+        // still required
+        var history = [];
+
         Selection.walkUp(function(node) {
 
           if (node.nodeType !== Node.TEXT_NODE) {
-            if (node.supports && node.supports('splitNode', {dp: dp})) {
+            var splitContext = {
+              history: history,
+              dp: dp
+            };
+            if (node.supports && node.supports('splitNode', splitContext)) {
 
               var parent = node.parentNode;
               // TODO(jliebrand): should really pass the insertContext to
@@ -213,6 +223,7 @@ require([
                   dp: dp
                 };
 
+                history.push(newFrag.cloneNode(true));
                 parent.insertNode(insertContext);
               }
 
