@@ -5,6 +5,8 @@
   <title>Splitting paragraphs Test</title>
 
   <link rel="stylesheet" href="../css/test.css">
+  <link href="../../third_party/prettify/styles/sons-of-obsidian.css" type="text/css" rel="stylesheet" />
+  <script src="../../third_party/prettify/src/prettify.js" type="text/javascript"></script>
 
   <script src="../../../platform/platform.js"></script>
   <script src="../../../tools/test/htmltest.js"></script>
@@ -21,6 +23,8 @@
 </head>
 <body>
 
+  <pre id="testSource" class="prettyprint lang-js"></pre>
+
   <h3>Splitting paragraphs - aka "new following paragraph"</h3>
   <p>
     This page tests the ability to "split" text from one paragraph
@@ -35,7 +39,7 @@
     </x-html-p>
   </polymer-editor>
 
-  <script type="text/javascript" charset="utf-8">
+  <script id="testScript" type="text/javascript" charset="utf-8">
 
   require.config({
       baseUrl: "../../"
@@ -83,6 +87,14 @@
 
     // just wait a second for now; fix this though!
     setTimeout(test, 1000);
+
+    var x = document.getElementById('testScript');
+    var y = document.getElementById('testSource');
+    var testFuncStart = x.innerText.search('function test');
+    var testFuncEnd = x.innerText.search('var assert = chai.assert');
+    y.innerText = x.innerText.substring(testFuncStart, testFuncEnd);
+
+    prettyPrint();
 
   });
 
