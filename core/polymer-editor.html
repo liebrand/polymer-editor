@@ -1,19 +1,18 @@
 
 <link rel="import" href="../../polymer/polymer.html">
 
-<!--<link rel="import" href="polymer-editor-content.html">-->
+<link rel="import" href="polymer-editor-content.html">
 
 <polymer-element name="polymer-editor" extends="polymer-editor-content">
-  <template>
-    <style>
+  <template><style>
       :host {
         display: block;
         -webkit-user-modify: read-write;
         -webkit-user-select: text;
+        white-space: pre-wrap;
+        padding: 10px;
       }
-    </style>
-    <content></content>
-  </template>
+    </style><content></content></template>
 
  <!--
   Ideally i'd like to use the 'normal' requireJs notation to load the main
